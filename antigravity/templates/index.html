@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,6 +14,15 @@
             --input-bg: #2a2a2a;
             --message-user-bg: #3d3d3d;
             --message-bot-bg: #2a2a2a;
+
+            /* VS Code specific colors */
+            --vscode-activity-bar-bg: #333333;
+            --vscode-activity-bar-icon-color: #cccccc;
+            --vscode-activity-bar-active-bg: #424242;
+            --vscode-title-bar-bg: #252526;
+            --vscode-title-bar-text: #cccccc;
+            --vscode-editor-bg: #1e1e1e;
+            --vscode-border-color: #444444;
         }
 
         body {
@@ -21,29 +31,111 @@
             color: var(--text-color);
             margin: 0;
             display: flex;
-            flex-direction: column;
             height: 100vh;
             overflow: hidden;
         }
 
-        header {
-            padding: 20px;
-            background-color: rgba(10, 10, 10, 0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid #333;
+        /* VS Code Layout */
+        .vscode-layout {
+            display: grid;
+            grid-template-columns: 48px 1fr;
+            /* Activity Bar width + Main Content */
+            height: 100vh;
+            width: 100vw;
+            background-color: var(--vscode-editor-bg);
+        }
+
+        .activity-bar {
+            background-color: var(--vscode-activity-bar-bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 10px;
+            border-right: 1px solid var(--vscode-border-color);
+        }
+
+        .activity-icon {
+            width: 36px;
+            height: 36px;
+            line-height: 36px;
+            text-align: center;
+            margin-bottom: 8px;
+            cursor: pointer;
+            border-radius: 5px;
+            color: var(--vscode-activity-bar-icon-color);
+            font-size: 1.2rem;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .activity-icon:hover {
+            background-color: var(--vscode-activity-bar-active-bg);
+            color: var(--text-color);
+        }
+
+        .activity-icon.active {
+            background-color: var(--vscode-activity-bar-active-bg);
+            color: var(--text-color);
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            /* Ensure content doesn't overflow */
+        }
+
+        .title-bar {
+            background-color: var(--vscode-title-bar-bg);
+            height: 30px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            padding: 0 15px;
+            border-bottom: 1px solid var(--vscode-border-color);
+            -webkit-app-region: drag;
+            /* For desktop apps, allows dragging */
         }
 
-        h1 {
+        .title-bar h1 {
             margin: 0;
-            font-size: 1.2rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            background: linear-gradient(90deg, #fff, #aaa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: var(--vscode-title-bar-text);
+            -webkit-app-region: no-drag;
+        }
+
+        .title-bar-controls {
+            display: flex;
+            gap: 8px;
+            -webkit-app-region: no-drag;
+        }
+
+        .control-button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .control-button.minimize {
+            background-color: #ffbd4a;
+        }
+
+        .control-button.maximize {
+            background-color: #00ca4e;
+        }
+
+        .control-button.close {
+            background-color: #ff605c;
+        }
+
+        .editor-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--vscode-editor-bg);
+            overflow: hidden;
         }
 
         #chat-container {
@@ -75,13 +167,14 @@
             align-self: flex-start;
             background-color: var(--message-bot-bg);
             border-bottom-left-radius: 2px;
-            border: 1px solid #333;
+            border: 1px solid var(--vscode-border-color);
         }
 
         .input-area {
-            padding: 20px;
-            background-color: var(--secondary-bg);
-            border-top: 1px solid #333;
+            padding: 15px 20px;
+            background-color: var(--vscode-title-bar-bg);
+            /* Use a darker background for input area */
+            border-top: 1px solid var(--vscode-border-color);
             display: flex;
             gap: 10px;
         }
@@ -90,7 +183,7 @@
             flex: 1;
             padding: 12px 16px;
             border-radius: 8px;
-            border: 1px solid #444;
+            border: 1px solid var(--vscode-border-color);
             background-color: var(--input-bg);
             color: white;
             font-size: 1rem;
@@ -118,41 +211,65 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
+
         ::-webkit-scrollbar-track {
-            background: var(--bg-color);
+            background: var(--vscode-editor-bg);
         }
+
         ::-webkit-scrollbar-thumb {
             background: #444;
             border-radius: 4px;
         }
+
         ::-webkit-scrollbar-thumb:hover {
             background: #555;
         }
     </style>
 </head>
+
 <body>
-    <header>
-        <h1>ANTIGRAVITY</h1>
-        <div style="font-size: 0.8rem; color: #666;">AGENT ACTIVE</div>
-    </header>
-
-    <div id="chat-container">
-        <div class="message bot">
-            Hello. I am AntiGravity. How can I assist you with your Home Assistant instance today?
+    <div class="vscode-layout">
+        <div class="activity-bar">
+            <div class="activity-icon active">💬</div>
+            <div class="activity-icon">⚙️</div>
         </div>
-    </div>
+        <div class="main-content">
+            <div class="title-bar">
+                <h1>AntiGravity Agent</h1>
+                <div class="title-bar-controls">
+                    <div class="control-button minimize"></div>
+                    <div class="control-button maximize"></div>
+                    <div class="control-button close"></div>
+                </div>
+            </div>
+            <div class="editor-area">
+                <div id="chat-container">
+                    <div class="message bot">
+                        Hello. I am AntiGravity. How can I assist you with your Home Assistant instance today?
+                    </div>
+                </div>
 
-    <div class="input-area">
-        <input type="text" id="user-input" placeholder="Type a command..." autocomplete="off">
-        <button id="send-btn">Send</button>
+                <div class="input-area">
+                    <input type="text" id="user-input" placeholder="Type a command..." autocomplete="off">
+                    <button id="send-btn">Send</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -195,4 +312,5 @@
         });
     </script>
 </body>
+
 </html>
