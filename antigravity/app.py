@@ -22,7 +22,7 @@ except FileNotFoundError:
 
 if api_key:
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel('gemini-pro')
+    model = genai.GenerativeModel('gemini-1.5-flash')
 else:
     logger.warning("No API Key found. Agent will be disabled.")
     model = None
@@ -45,7 +45,7 @@ def chat():
         response_text = response.text
     except Exception as e:
         logger.error(f"Gemini API Error: {e}")
-        response_text = "I encountered an error communicating with the gravity well (Gemini API)."
+        response_text = f"I encountered an error communicating with the gravity well: {str(e)}"
         
     return jsonify({"response": response_text})
 
