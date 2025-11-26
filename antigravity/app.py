@@ -7,6 +7,26 @@ app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+import os
+import json
+import google.generativeai as genai
+
+# Load options from Home Assistant
+OPTIONS_PATH = '/data/options.json'
+try:
+    with open(OPTIONS_PATH, 'r') as f:
+        options = json.load(f)
+        api_key = options.get('api_key')
+except FileNotFoundError:
+    api_key = os.environ.get('API_KEY') # Fallback for local testing
+
+if api_key:
+    genai.configure(api_key=api_key)
+    model = genai.GenerativeModel('gemini-pro')
+else:
+    logger.warning("No API Key found. Agent will be disabled.")
+    model = None
+
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -17,13 +37,15 @@ def chat():
     user_message = data.get('message', '')
     logger.info(f"Received message: {user_message}")
     
-    # Mock response for now
-    response_text = f"I am AntiGravity. You said: {user_message}"
-    
-    if "hello" in user_message.lower():
-        response_text = "Greetings. I am ready to assist you."
-    elif "status" in user_message.lower():
-        response_text = "All systems operational. Gravity is nominal."
+    if not model:
+        return jsonify({"response": "Error: API Key not configured. Please check the add-on configuration."})
+
+    try:
+        response = model.generate_content(user_message)
+        response_text = response.text
+    except Exception as e:
+        logger.error(f"Gemini API Error: {e}")
+        response_text = "I encountered an error communicating with the gravity well (Gemini API)."
         
     return jsonify({"response": response_text})
 

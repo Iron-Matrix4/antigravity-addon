@@ -13,8 +13,10 @@ arch:
 init: false
 map:
   - config:rw
-options: {}
-schema: {}
+options:
+  api_key: ""
+schema:
+  api_key: str
 ports:
   8099/tcp: 8099
 webui: "http://[HOST]:[PORT:8099]"

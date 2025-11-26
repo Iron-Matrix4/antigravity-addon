@@ -4,8 +4,8 @@ FROM $BUILD_FROM
 # Install requirements for add-on
 RUN \
   apk add --no-cache \
-    python3 \
-    py3-pip
+  python3 \
+  py3-pip
 
 # Copy data for add-on
 COPY run.sh /
@@ -14,7 +14,7 @@ COPY . /app
 WORKDIR /app
 
 # Install Python dependencies
-RUN pip3 install flask --break-system-packages
+RUN pip3 install flask google-generativeai --break-system-packages
 
 RUN chmod a+x /run.sh
 
