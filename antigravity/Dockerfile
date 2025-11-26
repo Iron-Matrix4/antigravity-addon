@@ -11,7 +11,7 @@ RUN apk add --no-cache \
   sudo
 
 # Install code-server
-RUN npm install -g code-server@latest
+RUN npm install -g --unsafe-perm code-server@latest
 
 # Create directory for extensions
 RUN mkdir -p /root/.local/share/code-server/extensions
