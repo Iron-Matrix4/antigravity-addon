@@ -31,7 +31,7 @@ if api_key:
     except Exception as e:
         logger.error(f"Failed to list models: {e}")
 
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    model = genai.GenerativeModel('gemini-flash-latest')
 else:
     logger.warning("No API Key found. Agent will be disabled.")
     model = None

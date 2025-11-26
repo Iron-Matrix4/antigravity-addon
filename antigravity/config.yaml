@@ -1,5 +1,5 @@
 name: "AntiGravity"
-version: "0.0.4"
+version: "0.0.5"
 slug: "antigravity"
 description: "The AntiGravity Agent for Home Assistant."
 url: "https://github.com/home-assistant/addons"
