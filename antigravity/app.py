@@ -22,6 +22,15 @@ except FileNotFoundError:
 
 if api_key:
     genai.configure(api_key=api_key)
+    try:
+        logger.info("Listing available models...")
+        for m in genai.list_models():
+            logger.info(f"Found model: {m.name}")
+            if 'generateContent' in m.supported_generation_methods:
+                logger.info(f"  - Supports generateContent: {m.name}")
+    except Exception as e:
+        logger.error(f"Failed to list models: {e}")
+
     model = genai.GenerativeModel('gemini-1.5-flash')
 else:
     logger.warning("No API Key found. Agent will be disabled.")

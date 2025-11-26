@@ -14,7 +14,7 @@ COPY . /app
 WORKDIR /app
 
 # Install Python dependencies
-RUN pip3 install flask google-generativeai --break-system-packages
+RUN pip3 install --upgrade flask google-generativeai --break-system-packages
 
 RUN chmod a+x /run.sh
 
