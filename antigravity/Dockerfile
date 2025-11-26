@@ -1,21 +1,35 @@
-ARG BUILD_FROM
+ARG BUILD_FROM=ghcr.io/home-assistant/amd64-base:latest
 FROM $BUILD_FROM
 
-# Install requirements for add-on
-RUN \
-  apk add --no-cache \
-  python3 \
-  py3-pip
+# Install dependencies
+RUN apk add --no-cache \
+  nodejs \
+  npm \
+  git \
+  bash \
+  curl \
+  sudo
 
-# Copy data for add-on
-COPY run.sh /
-COPY . /app
+# Install code-server
+RUN npm install -g code-server@latest
 
-WORKDIR /app
+# Create directory for extensions
+RUN mkdir -p /root/.local/share/code-server/extensions
 
-# Install Python dependencies
-RUN pip3 install --upgrade flask google-generativeai --break-system-packages
+# Download and install Gemini Code Assist extension
+# Using the official extension from Open VSX
+RUN curl -fsSL https://open-vsx.org/api/GoogleCloudTools/gemini-code-assist/0.0.1/file/GoogleCloudTools.gemini-code-assist-0.0.1.vsix \
+  -o /tmp/gemini.vsix || true
 
-RUN chmod a+x /run.sh
+# If download succeeded, install it
+RUN if [ -f /tmp/gemini.vsix ]; then \
+  code-server --install-extension /tmp/gemini.vsix; \
+  fi
 
-CMD [ "/run.sh" ]
+# Copy startup script
+COPY run.sh /app/run.sh
+RUN chmod +x /app/run.sh
+
+WORKDIR /config
+
+CMD ["/bin/bash", "/app/run.sh"]
