@@ -4,9 +4,12 @@
 PASSWORD=$(bashio::config 'password')
 API_KEY=$(bashio::config 'api_key')
 
-# Set Gemini API key as environment variable
+# Set environment variables
 export GEMINI_API_KEY="$API_KEY"
 export PASSWORD="$PASSWORD"
+export HOME="/root"
+
+bashio::log.info "API Key length: ${#API_KEY}"
 
 # Create user settings directory
 mkdir -p /root/.local/share/code-server/User
