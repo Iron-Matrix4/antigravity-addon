@@ -1,5 +1,5 @@
 name: "AntiGravity"
-version: "0.1.7"
+version: "0.1.8"
 slug: "antigravity"
 description: "VS Code with Gemini AI for Home Assistant."
 url: "https://github.com/Iron-Matrix4/antigravity-addon"

@@ -42,14 +42,19 @@ cat > /root/.continue/config.json <<EOF
 }
 EOF
 
+# Remove any existing config file to prevent conflicts
+rm -f /root/.config/code-server/config.yaml
+
 bashio::log.info "Starting code-server..."
 bashio::log.info "Bind address: 0.0.0.0:8080"
 bashio::log.info "Auth method: password"
+bashio::log.info "Password length: ${#PASSWORD}"
 
 # Launch code-server with CLI flags
 # --user-data-dir to ensure settings are persisted/loaded correctly
 # --extensions-dir to ensure extensions are found
-exec code-server \
+# We explicitly pass the environment variable in the exec line to be absolutely sure
+exec env PASSWORD="$PASSWORD" code-server \
   --bind-addr 0.0.0.0:8080 \
   --auth password \
   --user-data-dir /root/.local/share/code-server \
