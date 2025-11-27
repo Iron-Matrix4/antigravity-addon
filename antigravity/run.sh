@@ -8,18 +8,10 @@ API_KEY=$(bashio::config 'api_key')
 export GEMINI_API_KEY="$API_KEY"
 export PASSWORD="$PASSWORD"
 
-# Create code-server config directory
-mkdir -p /root/.config/code-server
-
-# Write code-server config
-cat > /root/.config/code-server/config.yaml <<EOF
-bind-addr: 0.0.0.0:8080
-auth: password
-cert: false
-EOF
-
-# Create user settings for VS Code
+# Create user settings directory
 mkdir -p /root/.local/share/code-server/User
+
+# Write VS Code settings
 cat > /root/.local/share/code-server/User/settings.json <<EOF
 {
   "workbench.colorTheme": "Default Dark+",
@@ -50,8 +42,16 @@ cat > /root/.continue/config.json <<EOF
 }
 EOF
 
-bashio::log.info "Starting code-server on port 8080..."
-bashio::log.info "Password authentication is enabled"
+bashio::log.info "Starting code-server..."
+bashio::log.info "Bind address: 0.0.0.0:8080"
+bashio::log.info "Auth method: password"
 
-# Launch code-server
-exec code-server /config
+# Launch code-server with CLI flags
+# --user-data-dir to ensure settings are persisted/loaded correctly
+# --extensions-dir to ensure extensions are found
+exec code-server \
+  --bind-addr 0.0.0.0:8080 \
+  --auth password \
+  --user-data-dir /root/.local/share/code-server \
+  --extensions-dir /root/.local/share/code-server/extensions \
+  /config
