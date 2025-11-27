@@ -6,6 +6,7 @@ API_KEY=$(bashio::config 'api_key')
 
 # Set Gemini API key as environment variable
 export GEMINI_API_KEY="$API_KEY"
+export PASSWORD="$PASSWORD"
 
 # Create code-server config directory
 mkdir -p /root/.config/code-server
@@ -14,7 +15,6 @@ mkdir -p /root/.config/code-server
 cat > /root/.config/code-server/config.yaml <<EOF
 bind-addr: 0.0.0.0:8080
 auth: password
-password: ${PASSWORD}
 cert: false
 EOF
 
