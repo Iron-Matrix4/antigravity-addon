@@ -11,7 +11,6 @@ RUN apt-get update && apt-get install -y \
   openssl \
   net-tools \
   locales \
-  jq \
   && rm -rf /var/lib/apt/lists/*
 
 # Install code-server via official script
@@ -20,9 +19,8 @@ RUN curl -fsSL https://code-server.dev/install.sh | sh
 # Create directory for extensions
 RUN mkdir -p /root/.local/share/code-server/extensions
 
-# Install Continue extension from GitHub Releases (latest)
-RUN LATEST_URL=$(curl -s https://api.github.com/repos/continuedev/continue/releases/latest | jq -r '.assets[] | select(.name | endswith(".vsix")) | .browser_download_url' | head -n 1) && \
-  curl -fL "$LATEST_URL" -o /tmp/continue.vsix && \
+# Install Continue extension from VS Code Marketplace (v1.3.24)
+RUN curl -fL "https://marketplace.visualstudio.com/_apis/public/gallery/publishers/Continue/vsextensions/continue/1.3.24/vspackage" -o /tmp/continue.vsix && \
   code-server --install-extension /tmp/continue.vsix && \
   rm /tmp/continue.vsix
 
