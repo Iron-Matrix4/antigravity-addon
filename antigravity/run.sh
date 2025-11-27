@@ -47,8 +47,15 @@ rm -f /root/.config/code-server/config.yaml
 
 bashio::log.info "Starting code-server..."
 bashio::log.info "Bind address: 0.0.0.0:8080"
-bashio::log.info "Auth method: password"
 bashio::log.info "Password length: ${#PASSWORD}"
+
+if [ -z "$PASSWORD" ]; then
+    bashio::log.warning "Password is empty. Disabling authentication!"
+    AUTH_METHOD="none"
+else
+    bashio::log.info "Auth method: password"
+    AUTH_METHOD="password"
+fi
 
 # Launch code-server with CLI flags
 # --user-data-dir to ensure settings are persisted/loaded correctly
@@ -56,7 +63,7 @@ bashio::log.info "Password length: ${#PASSWORD}"
 # We explicitly pass the environment variable in the exec line to be absolutely sure
 exec env PASSWORD="$PASSWORD" code-server \
   --bind-addr 0.0.0.0:8080 \
-  --auth password \
+  --auth "$AUTH_METHOD" \
   --user-data-dir /root/.local/share/code-server \
   --extensions-dir /root/.local/share/code-server/extensions \
   /config
