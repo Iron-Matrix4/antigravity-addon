@@ -20,7 +20,7 @@ RUN curl -fsSL https://code-server.dev/install.sh | sh
 RUN mkdir -p /root/.local/share/code-server/extensions
 
 # Install Continue extension from VS Code Marketplace (v1.3.24)
-RUN curl -fL "https://marketplace.visualstudio.com/_apis/public/gallery/publishers/Continue/vsextensions/continue/1.3.24/vspackage" -o /tmp/continue.vsix && \
+RUN curl --compressed -fL "https://marketplace.visualstudio.com/_apis/public/gallery/publishers/Continue/vsextensions/continue/1.3.24/vspackage" -o /tmp/continue.vsix && \
   code-server --install-extension /tmp/continue.vsix && \
   rm /tmp/continue.vsix
 
