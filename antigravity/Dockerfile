@@ -1,4 +1,4 @@
-ARG BUILD_FROM=python:3.12-slim-bookworm
+ARG BUILD_FROM
 FROM $BUILD_FROM
 
 # Install dependencies
