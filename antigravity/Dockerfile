@@ -8,7 +8,12 @@ RUN apk add --no-cache \
   git \
   bash \
   curl \
-  sudo
+  sudo \
+  build-base \
+  python3 \
+  py3-pip \
+  libc6-compat \
+  libstdc++
 
 # Install code-server
 RUN npm install -g --unsafe-perm code-server@latest
@@ -16,15 +21,8 @@ RUN npm install -g --unsafe-perm code-server@latest
 # Create directory for extensions
 RUN mkdir -p /root/.local/share/code-server/extensions
 
-# Download and install Gemini Code Assist extension
-# Using the official extension from Open VSX
-RUN curl -fsSL https://open-vsx.org/api/GoogleCloudTools/gemini-code-assist/0.0.1/file/GoogleCloudTools.gemini-code-assist-0.0.1.vsix \
-  -o /tmp/gemini.vsix || true
-
-# If download succeeded, install it
-RUN if [ -f /tmp/gemini.vsix ]; then \
-  code-server --install-extension /tmp/gemini.vsix; \
-  fi
+# Install Continue extension
+RUN code-server --install-extension Continue.continue
 
 # Copy startup script
 COPY run.sh /app/run.sh

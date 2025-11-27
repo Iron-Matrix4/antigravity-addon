@@ -18,14 +18,35 @@ password: ${PASSWORD}
 cert: false
 EOF
 
-# Create user settings for Gemini extension
+# Create user settings for VS Code
 mkdir -p /root/.local/share/code-server/User
 cat > /root/.local/share/code-server/User/settings.json <<EOF
 {
-  "gemini.apiKey": "${API_KEY}",
   "workbench.colorTheme": "Default Dark+",
   "editor.fontSize": 14,
   "terminal.integrated.fontSize": 14
+}
+EOF
+
+# Configure Continue extension
+mkdir -p /root/.continue
+cat > /root/.continue/config.json <<EOF
+{
+  "models": [
+    {
+      "title": "Gemini 1.5 Flash",
+      "provider": "gemini",
+      "model": "gemini-1.5-flash",
+      "apiKey": "${API_KEY}"
+    }
+  ],
+  "tabAutocompleteModel": {
+    "title": "Gemini 1.5 Flash",
+    "provider": "gemini",
+    "model": "gemini-1.5-flash",
+    "apiKey": "${API_KEY}"
+  },
+  "allowAnonymousTelemetry": false
 }
 EOF
 
