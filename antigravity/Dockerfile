@@ -1,38 +1,20 @@
-ARG BUILD_FROM=ghcr.io/home-assistant/amd64-base:latest
+ARG BUILD_FROM=python:3.12-slim-bookworm
 FROM $BUILD_FROM
 
 # Install dependencies
-RUN apk add --no-cache \
-  nodejs \
-  npm \
-  git \
-  bash \
+RUN apt-get update && apt-get install -y \
   curl \
+  git \
   sudo \
-  build-base \
-  python3 \
-  py3-pip \
-  libc6-compat \
-  libstdc++ \
-  openssl
+  build-essential \
+  libstdc++6 \
+  openssl \
+  net-tools \
+  locales \
+  && rm -rf /var/lib/apt/lists/*
 
-# Install code-server via release binary
-ARG CODE_SERVER_VERSION=4.106.2
-RUN ARCH=$(uname -m) && \
-  if [ "$ARCH" = "x86_64" ]; then \
-  CS_ARCH="amd64"; \
-  elif [ "$ARCH" = "aarch64" ]; then \
-  CS_ARCH="arm64"; \
-  elif [ "$ARCH" = "armv7l" ]; then \
-  CS_ARCH="armv7l"; \
-  else \
-  echo "Unsupported architecture: $ARCH"; exit 1; \
-  fi && \
-  curl -fOL "https://github.com/coder/code-server/releases/download/v$CODE_SERVER_VERSION/code-server-$CODE_SERVER_VERSION-linux-$CS_ARCH.tar.gz" && \
-  tar -xzf "code-server-$CODE_SERVER_VERSION-linux-$CS_ARCH.tar.gz" && \
-  mv "code-server-$CODE_SERVER_VERSION-linux-$CS_ARCH" /usr/lib/code-server && \
-  ln -s /usr/lib/code-server/bin/code-server /usr/bin/code-server && \
-  rm "code-server-$CODE_SERVER_VERSION-linux-$CS_ARCH.tar.gz"
+# Install code-server via official script
+RUN curl -fsSL https://code-server.dev/install.sh | sh
 
 # Create directory for extensions
 RUN mkdir -p /root/.local/share/code-server/extensions
