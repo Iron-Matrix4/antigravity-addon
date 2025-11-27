@@ -19,7 +19,10 @@ cat > /root/.local/share/code-server/User/settings.json <<EOF
 {
   "workbench.colorTheme": "Default Dark+",
   "editor.fontSize": 14,
-  "terminal.integrated.fontSize": 14
+  "terminal.integrated.fontSize": 14,
+  "chat.commandCenter.enabled": false,
+  "workbench.startupEditor": "none",
+  "workbench.tips.enabled": false
 }
 EOF
 
